@@ -4,6 +4,7 @@ import numpy as np
 __IMAGE_PATH = "building_detection/"
 __THRESHOLD = 0.9
 __MAX_COLOR_DELTA = 10
+
 __BUILDING_NOT_FOUND = 0
 __BUILDING_NOT_PURCHASABLE = 1
 __BUILDING_PURCHASABLE = 2
