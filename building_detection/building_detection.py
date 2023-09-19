@@ -23,7 +23,6 @@ def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
 
     # get the width and height of the images
     can_buy_img_w, can_buy_img_h = can_buy_img.shape[:-1]
-    can_not_buy_img_w, can_not_buy_img_h = can_not_buy_img.shape[:-1]
 
     # get the average color of the images
     can_buy_avg_color = get_avg_color_of_image(can_buy_img)
@@ -37,11 +36,11 @@ def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
         cropped = screenshot_img[location[1]:location[1] + can_buy_img_h, location[0]:location[0] + can_buy_img_w]
         avg_color = get_avg_color_of_image(cropped)
         if check_if_color_is_the_same(avg_color, can_buy_avg_color, __MAX_COLOR_DELTA):
-            # We found the can_buy image
-            return [__BUILDING_PURCHASABLE, ( location[0] + ( can_buy_img_w / 2 )), ( location[1] + ( can_buy_img_h / 2 ))]
+            ret_val = __BUILDING_PURCHASABLE
         elif check_if_color_is_the_same(avg_color, can_not_buy_avg_color, __MAX_COLOR_DELTA):
-            # We found the can_not_buy image
-            return [__BUILDING_NOT_PURCHASABLE, ( location[0] + ( can_not_buy_img_w / 2 )), ( location[1] + ( can_not_buy_img_h / 2 ))]
+            ret_val = __BUILDING_NOT_PURCHASABLE
+        print(ret_val)
+        return [ret_val, ( location[0] + ( can_buy_img_w / 2 )), ( location[1] + ( can_buy_img_h / 2 ))]
     else:
         # We are assuming that the image detection does not care for the color,
         # so if we get here we can assume that the image is not on the screen
