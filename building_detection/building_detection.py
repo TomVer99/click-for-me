@@ -8,6 +8,7 @@ __BUILDING_NOT_FOUND = 0
 __BUILDING_NOT_PURCHASABLE = 1
 __BUILDING_PURCHASABLE = 2
 
+# TODO: refactor this function so other buildings are basically copy paste with different images
 def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     assert screenshot_img is not None, "get_cursor_status() -> screenshot_img is None"
 
