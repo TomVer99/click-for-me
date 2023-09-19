@@ -45,3 +45,10 @@ def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
         # so if we get here we can assume that the image is not on the screen
         return [__BUILDING_NOT_FOUND,0,0]
 
+def get_avg_color_of_image(img:cv.typing.MatLike) -> [int, int, int]:
+    assert img is not None, "get_avg_color_of_image() -> img is None"
+    avg_color_per_row = np.average(img, axis=0)
+    avg_color = np.average(avg_color_per_row, axis=0)
+    avg_color = np.uint8(avg_color).tolist()
+    return avg_color
+
