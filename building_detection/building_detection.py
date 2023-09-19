@@ -52,3 +52,11 @@ def get_avg_color_of_image(img:cv.typing.MatLike) -> [int, int, int]:
     avg_color = np.uint8(avg_color).tolist()
     return avg_color
 
+def check_if_color_is_the_same(color_a:[int, int, int], color_b:[int, int, int], max_delta:int):
+    if abs(color_a[0] - color_b[0]) > max_delta:
+        return False
+    if abs(color_a[1] - color_b[1]) > max_delta:
+        return False
+    if abs(color_a[2] - color_b[2]) > max_delta:
+        return False
+    return True
