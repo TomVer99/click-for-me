@@ -22,6 +22,78 @@ def get_grandma_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     can_not_buy_img = cv.imread(__IMAGE_PATH + "grandma_no_buy.png", cv.IMREAD_COLOR)
     return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
 
+# TODO: implement
+def get_farm_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_mine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_factory_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_bank_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_temple_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_wizard_tower_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_shipment_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_alchemy_lab_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_portal_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_time_machine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_antimatter_condenser_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_prism_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_chancemaker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_fractal_engine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_javascript_console_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_idleverse_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_cortex_baker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
+# TODO: implement
+def get_you_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    pass
+
 def detect_building(screenshot_img:cv.typing.MatLike, can_buy_img:cv.typing.MatLike, can_not_buy_img:cv.typing.MatLike
                     , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [int, int, int]:
     assert screenshot_img  is not None, f"{inspect.stack()[1][3]}() -> screenshot_img is None"
