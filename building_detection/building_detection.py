@@ -17,6 +17,11 @@ def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     can_not_buy_img = cv.imread(__IMAGE_PATH + "cursor_no_buy.png", cv.IMREAD_COLOR)
     return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
 
+def get_grandma_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
+    can_buy_img     = cv.imread(__IMAGE_PATH + "grandma_buy.png", cv.IMREAD_COLOR)
+    can_not_buy_img = cv.imread(__IMAGE_PATH + "grandma_no_buy.png", cv.IMREAD_COLOR)
+    return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
+
 def detect_building(screenshot_img:cv.typing.MatLike, can_buy_img:cv.typing.MatLike, can_not_buy_img:cv.typing.MatLike
                     , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [int, int, int]:
     assert screenshot_img  is not None, f"{inspect.stack()[1][3]}() -> screenshot_img is None"
