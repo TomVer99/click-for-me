@@ -22,9 +22,10 @@ def get_grandma_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     can_not_buy_img = cv.imread(__IMAGE_PATH + "grandma_no_buy.png", cv.IMREAD_COLOR)
     return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
 
-# TODO: implement
 def get_farm_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    can_buy_img     = cv.imread(__IMAGE_PATH + "farm_buy.png", cv.IMREAD_COLOR)
+    can_not_buy_img = cv.imread(__IMAGE_PATH + "farm_no_buy.png", cv.IMREAD_COLOR)
+    return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
 
 # TODO: implement
 def get_mine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
