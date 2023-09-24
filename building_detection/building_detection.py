@@ -2,10 +2,14 @@ import cv2 as cv
 import numpy as np
 import enum
 import inspect
+import json
 
 __IMAGE_PATH = "building_detection/"
 __THRESHOLD = 0.9
 __MAX_COLOR_DELTA = 10
+
+__HEIGHT_ITEMS = 21
+__WIDTH_ITEMS = 4
 
 class BuildingStatus(enum.Enum):
     BUILDING_NOT_FOUND = 0
@@ -13,23 +17,16 @@ class BuildingStatus(enum.Enum):
     BUILDING_PURCHASABLE = 2
 
 def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    can_buy_img     = cv.imread(__IMAGE_PATH + "cursor_buy.png", cv.IMREAD_COLOR)
-    can_not_buy_img = cv.imread(__IMAGE_PATH + "cursor_no_buy.png", cv.IMREAD_COLOR)
-    return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
+    return detect_building(screenshot_img, "cursor")
 
 def get_grandma_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    can_buy_img     = cv.imread(__IMAGE_PATH + "grandma_buy.png", cv.IMREAD_COLOR)
-    can_not_buy_img = cv.imread(__IMAGE_PATH + "grandma_no_buy.png", cv.IMREAD_COLOR)
-    return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
+    return detect_building(screenshot_img, "grandma")
 
 def get_farm_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    can_buy_img     = cv.imread(__IMAGE_PATH + "farm_buy.png", cv.IMREAD_COLOR)
-    can_not_buy_img = cv.imread(__IMAGE_PATH + "farm_no_buy.png", cv.IMREAD_COLOR)
-    return detect_building(screenshot_img, can_buy_img, can_not_buy_img)
+    return detect_building(screenshot_img, "farm")
 
-# TODO: implement
 def get_mine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "mine")
 
 # TODO: implement
 def get_factory_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
@@ -95,30 +92,40 @@ def get_cortex_baker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]
 def get_you_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     pass
 
-def detect_building(screenshot_img:cv.typing.MatLike, can_buy_img:cv.typing.MatLike, can_not_buy_img:cv.typing.MatLike
+def detect_building(screenshot_img:cv.typing.MatLike, building:str
                     , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [int, int, int]:
     assert screenshot_img  is not None, f"{inspect.stack()[1][3]}() -> screenshot_img is None"
-    assert can_buy_img     is not None, f"{inspect.stack()[1][3]}() -> building_can_buy is None"
-    assert can_not_buy_img is not None, f"{inspect.stack()[1][3]}() -> building_can_not_buy is None"
+    buildings_img = cv.imread(__IMAGE_PATH + "buildings.png", cv.IMREAD_COLOR)
+    assert buildings_img is not None, f"{inspect.stack()[1][3]}() -> buildings_img is None"
+    buildings_height, buildings_width, _ = buildings_img.shape
+    ppc_height:int = int(buildings_height / __HEIGHT_ITEMS)
+    ppc_width:int = int(buildings_width / __WIDTH_ITEMS)
+
+    with open(__IMAGE_PATH + "buildings.json", "r") as json_file:
+        json_s = json.load(json_file)
+        # TODO: read more possible locations per building
+        info = json_s[building][0]
+        building_img = buildings_img[int(ppc_height * info[1]):int(ppc_height * (info[1] + 1))
+                                     , int(ppc_height * info[0]):int(ppc_width * (info[0] + 1))]
+        avg_color_can_buy = get_avg_color_of_image(building_img)
+
+        result = cv.matchTemplate(screenshot_img, building_img, cv.TM_CCOEFF_NORMED)
+        locations = np.where(result >= threshold)
+        if len(locations[0]) > 0 and len(locations[1]) > 0:
+            location  = locations[1][0], locations[0][0]
+            cropped   = screenshot_img[location[1]:location[1] + ppc_height, location[0]:location[0] + ppc_width]
+            avg_color = get_avg_color_of_image(cropped)
+            
+            # TODO: check color for not purchasable (decrease chance of false positive)
+            if check_if_color_is_the_same(avg_color, avg_color_can_buy, max_color_delta):
+                ret_val = BuildingStatus.BUILDING_PURCHASABLE
+            else:
+                ret_val = BuildingStatus.BUILDING_NOT_PURCHASABLE
+            
+            return [ret_val, ( location[0] + ( ppc_width / 2 )), ( location[1] + ( ppc_height / 2 ))]
+        else:
+            return [BuildingStatus.BUILDING_NOT_FOUND,0,0]
     
-    can_buy_img_w, can_buy_img_h = can_buy_img.shape[:-1]
-    can_buy_avg_color     = get_avg_color_of_image(can_buy_img)
-    can_not_buy_avg_color = get_avg_color_of_image(can_not_buy_img)
-
-    result    = cv.matchTemplate(screenshot_img, can_buy_img, cv.TM_CCOEFF_NORMED)
-    locations = np.where(result >= threshold)
-    if len(locations[0]) > 0 and len(locations[1]) > 0:
-        location  = locations[1][0], locations[0][0]
-        cropped   = screenshot_img[location[1]:location[1] + can_buy_img_h, location[0]:location[0] + can_buy_img_w]
-        avg_color = get_avg_color_of_image(cropped)
-        if check_if_color_is_the_same(avg_color, can_buy_avg_color, max_color_delta):
-            ret_val = BuildingStatus.BUILDING_PURCHASABLE
-        elif check_if_color_is_the_same(avg_color, can_not_buy_avg_color, max_color_delta):
-            ret_val = BuildingStatus.BUILDING_NOT_PURCHASABLE
-        return [ret_val, ( location[0] + ( can_buy_img_w / 2 )), ( location[1] + ( can_buy_img_h / 2 ))]
-    else:
-        return [BuildingStatus.BUILDING_NOT_FOUND,0,0]
-
 def get_avg_color_of_image(img:cv.typing.MatLike) -> [int, int, int]:
     avg_color_per_row = np.average(img, axis=0)
     avg_color         = np.average(avg_color_per_row, axis=0)
