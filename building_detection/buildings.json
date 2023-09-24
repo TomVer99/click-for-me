@@ -1,0 +1,22 @@
+{
+    "cursor":               [[0, 0]],
+    "grandma":              [[0, 1], [0, 2], [1, 2], [2, 2], [3, 2]],
+    "farm":                 [[0, 3]],
+    "mine":                 [[0, 4]],
+    "factory":              [[0, 5]],
+    "bank":                 [[0, 6]],
+    "temple":               [[0, 7]],
+    "wizard_tower":         [[0, 8]],
+    "shipment":             [[0, 9]],
+    "alchemy_lab":          [[0, 10]],
+    "portal":               [[0, 11]],
+    "time_machine":         [[0, 12]],
+    "antimatter_condenser": [[0, 13]],
+    "prism":                [[0, 14]],
+    "chancemaker":          [[0, 15]],
+    "fractal_engine":       [[0, 16]],
+    "javascript_console":   [[0, 17]],
+    "idleverse":            [[0, 18]],
+    "cortex_baker":         [[0, 19]],
+    "you":                  [[0, 20]]
+}
