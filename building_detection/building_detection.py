@@ -76,6 +76,24 @@ def get_cortex_baker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]
 def get_you_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     return detect_building(screenshot_img, "you")
 
+def detect_building_no_return(screenshot_img:cv.typing.MatLike, building:Building, ret_val:[[str, BuildingStatus, int, int]] = None, ret_val_lock:threading.Lock = None
+                    , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [str, BuildingStatus, int, int]:
+    temp = detect_building(screenshot_img, building.name, threshold, max_color_delta)
+    result = []
+    result.append(building.name)
+    result.append(temp[0])
+    result.append(temp[1])
+    result.append(temp[2])
+
+    # Wait until we can access the return value
+    if ret_val_lock != None:
+        ret_val_lock.acquire()
+    if ret_val != None:
+        ret_val.append(result)
+    ret_val[building.value] = result
+    if ret_val_lock != None:
+        ret_val_lock.release()
+
 def detect_building(screenshot_img:cv.typing.MatLike, building:str
                     , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [BuildingStatus, int, int]:
     assert screenshot_img  is not None, f"{inspect.stack()[1][3]}() -> screenshot_img is None"
