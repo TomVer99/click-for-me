@@ -77,7 +77,7 @@ def get_you_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     return detect_building(screenshot_img, "you")
 
 def detect_building(screenshot_img:cv.typing.MatLike, building:str
-                    , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [int, int, int]:
+                    , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [BuildingStatus, int, int]:
     assert screenshot_img  is not None, f"{inspect.stack()[1][3]}() -> screenshot_img is None"
     buildings_img = cv.imread(__IMAGE_PATH + "buildings.png", cv.IMREAD_COLOR)
     assert buildings_img is not None, f"{inspect.stack()[1][3]}() -> buildings_img is None"
