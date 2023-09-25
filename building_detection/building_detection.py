@@ -16,6 +16,32 @@ class BuildingStatus(enum.Enum):
     BUILDING_NOT_PURCHASABLE = 1
     BUILDING_PURCHASABLE = 2
 
+
+def get_array_of_building_status(screenshot_img:cv.typing.MatLike) -> [[str, BuildingStatus, int, int]]:
+    ret_val = []
+    for i in range(len(Building)):
+        ret_val.append([Building(i).name, BuildingStatus.BUILDING_NOT_FOUND, 0, 0])
+    ret_val_lock = threading.Lock()
+    threads = []
+
+    use_threads = True
+
+    for building in Building:
+        # Start a new thread for each building
+        if use_threads == True:
+            thread = threading.Thread(target=detect_building, args=(screenshot_img, building.name, ret_val, ret_val_lock))
+            thread.start()
+            threads.append(thread)
+        else:
+            # ret_val.append([building.name, detect_building(screenshot_img, building.name)[0], 0, 0])
+            detect_building_no_return(screenshot_img, building, ret_val, ret_val_lock)
+
+    if use_threads == True:
+        for thread in threads:
+            thread.join()
+
+    return ret_val
+
 def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     return detect_building(screenshot_img, "cursor")
 
