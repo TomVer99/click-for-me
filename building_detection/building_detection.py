@@ -17,6 +17,27 @@ class BuildingStatus(enum.Enum):
     BUILDING_NOT_PURCHASABLE = 1
     BUILDING_PURCHASABLE = 2
 
+class Building(enum.Enum):
+    cursor = 0
+    grandma = 1
+    farm = 2
+    mine = 3
+    factory = 4
+    bank = 5
+    temple = 6
+    wizard_tower = 7
+    shipment = 8
+    alchemy_lab = 9
+    portal = 10
+    time_machine = 11
+    antimatter_condenser = 12
+    prism = 13
+    chancemaker = 14
+    fractal_engine = 15
+    javascript_console = 16
+    idleverse = 17
+    cortex_baker = 18
+    you = 19
 
 def get_array_of_building_status(screenshot_img:cv.typing.MatLike) -> [[str, BuildingStatus, int, int]]:
     ret_val = []
