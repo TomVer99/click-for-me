@@ -46,102 +46,31 @@ def get_array_of_building_status(screenshot_img:cv.typing.MatLike) -> [[str, Bui
     ret_val_lock = threading.Lock()
     threads = []
 
-    use_threads = True
-
     for building in Building:
-        # Start a new thread for each building
-        if use_threads == True:
-            thread = threading.Thread(target=detect_building, args=(screenshot_img, building.name, ret_val, ret_val_lock))
-            thread.start()
-            threads.append(thread)
-        else:
-            # ret_val.append([building.name, detect_building(screenshot_img, building.name)[0], 0, 0])
-            detect_building_no_return(screenshot_img, building, ret_val, ret_val_lock)
-
-    if use_threads == True:
-        for thread in threads:
-            thread.join()
+        thread = threading.Thread(target=detect_building_no_return, args=(screenshot_img, building, ret_val, ret_val_lock))
+        thread.start()
+        threads.append(thread)
+    
+    for thread in threads:
+        thread.join()
 
     return ret_val
 
-def get_cursor_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "cursor")
-
-def get_grandma_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "grandma")
-
-def get_farm_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "farm")
-
-def get_mine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "mine")
-
-def get_factory_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "factory")
-
-def get_bank_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "bank")
-
-def get_temple_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "temple")
-
-def get_wizard_tower_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "wizard_tower")
-
-def get_shipment_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "shipment")
-
-def get_alchemy_lab_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "alchemy_lab")
-
-def get_portal_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "portal")
-
-def get_time_machine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "time_machine")
-
-def get_antimatter_condenser_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "antimatter_condenser")
-
-def get_prism_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "prism")
-
-def get_chancemaker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "chancemaker")
-
-def get_fractal_engine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "fractal_engine")
-
-def get_javascript_console_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "javascript_console")
-
-def get_idleverse_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "idleverse")
-
-def get_cortex_baker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "cortex_baker")
-
-def get_you_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    return detect_building(screenshot_img, "you")
-
+# TODO: refactor back into one function
 def detect_building_no_return(screenshot_img:cv.typing.MatLike, building:Building, ret_val:[[str, BuildingStatus, int, int]] = None, ret_val_lock:threading.Lock = None
                     , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [str, BuildingStatus, int, int]:
     temp = detect_building(screenshot_img, building.name, threshold, max_color_delta)
+    
     result = []
     result.append(building.name)
     result.append(temp[0])
     result.append(temp[1])
     result.append(temp[2])
 
-    # Wait until we can access the return value
-    if ret_val_lock != None:
-        ret_val_lock.acquire()
-    if ret_val != None:
-        ret_val.append(result)
-    ret_val[building.value] = result
-    if ret_val_lock != None:
-        ret_val_lock.release()
+    with ret_val_lock:
+        ret_val[building.value] = result
 
+# TODO: refactor back into one function
 def detect_building(screenshot_img:cv.typing.MatLike, building:str
                     , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [BuildingStatus, int, int]:
     assert screenshot_img  is not None, f"{inspect.stack()[1][3]}() -> screenshot_img is None"
