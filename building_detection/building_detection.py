@@ -28,69 +28,53 @@ def get_farm_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
 def get_mine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
     return detect_building(screenshot_img, "mine")
 
-# TODO: implement
 def get_factory_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "factory")
 
-# TODO: implement
 def get_bank_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "bank")
 
-# TODO: implement
 def get_temple_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "temple")
 
-# TODO: implement
 def get_wizard_tower_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "wizard_tower")
 
-# TODO: implement
 def get_shipment_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "shipment")
 
-# TODO: implement
 def get_alchemy_lab_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "alchemy_lab")
 
-# TODO: implement
 def get_portal_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "portal")
 
-# TODO: implement
 def get_time_machine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "time_machine")
 
-# TODO: implement
 def get_antimatter_condenser_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "antimatter_condenser")
 
-# TODO: implement
 def get_prism_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "prism")
 
-# TODO: implement
 def get_chancemaker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "chancemaker")
 
-# TODO: implement
 def get_fractal_engine_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "fractal_engine")
 
-# TODO: implement
 def get_javascript_console_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "javascript_console")
 
-# TODO: implement
 def get_idleverse_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "idleverse")
 
-# TODO: implement
 def get_cortex_baker_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "cortex_baker")
 
-# TODO: implement
 def get_you_status(screenshot_img:cv.typing.MatLike) -> [int, int, int]:
-    pass
+    return detect_building(screenshot_img, "you")
 
 def detect_building(screenshot_img:cv.typing.MatLike, building:str
                     , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [int, int, int]:
