@@ -3,6 +3,7 @@ import numpy as np
 import enum
 import inspect
 import json
+import threading
 
 __IMAGE_PATH = "building_detection/"
 __THRESHOLD = 0.9
