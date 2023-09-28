@@ -55,7 +55,12 @@ def main():
                     move_to_and_click(blg[2], blg[3])
                     bought_a_building = True
                     break
-        
+            
+            for blg in reversed(buildings):
+                if (blg[1] != building_detection.BuildingStatus.BUILDING_NOT_FOUND):
+                    move_to_and_scroll(-__SCROLL_AMOUNT, blg[2], blg[3])
+                    break
+
         if not bought_a_building and not was_able_to_buy_previously:
             debug(f"No building was able to be bought twice in a row, increasing wait time to {count_upper}")
             count_upper += __BUY_INCREASE_TIME
