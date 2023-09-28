@@ -29,7 +29,7 @@ Click For Me is a Python-based bot designed to automate the tedious clicking and
 
 - [CV2](https://pypi.org/project/opencv-python/)
 - [pyautogui](https://pypi.org/project/PyAutoGUI/)
-- [Python 3.10+](https://www.python.org/downloads/)
+- [(tested on) Python 3.10](https://www.python.org/downloads/)
 
 ## Execution
 
