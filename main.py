@@ -66,6 +66,8 @@ def main():
         while count < count_upper and not keyboard.is_pressed('q'):
             time.sleep(1)
             count += 1
+    
+    pyautogui.alert('Cookie Clicker Bot has finished!')
 
 def move_to_and_click(x, y):
     pyautogui.moveTo(x, y, duration=1, tween=pyautogui.easeInOutQuad)
