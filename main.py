@@ -6,12 +6,17 @@ import building_detection.building_detection as building_detection
 import screenshotter.screenshotter as screenshotter
 
 __DEBUG = False
+__MINIMUM_BUY_TIME = 10
+__BUY_DECREASE_TIME = 15
+__BUY_INCREASE_TIME = 60
+__SCROLL_AMOUNT = 1000
+__QUIT_KEY = 'q'
 
 def main():
     count_upper = 60
     was_able_to_buy_previously = False
 
-    while not keyboard.is_pressed('q'):
+    while not keyboard.is_pressed(__QUIT_KEY):
         screenshot_img = screenshotter.take_screenshot()
         buildings = building_detection.get_array_of_building_status(screenshot_img)
 
@@ -21,7 +26,7 @@ def main():
             debug("We are not at the bottom of the list of buildings, scrolling down")
             for blg in buildings:
                 if blg[1] != building_detection.BuildingStatus.BUILDING_NOT_FOUND:
-                    move_to_and_scroll(-1000, blg[2], blg[3])
+                    move_to_and_scroll(-__SCROLL_AMOUNT, blg[2], blg[3])
                     break
             screenshot_img = screenshotter.take_screenshot()
             buildings = building_detection.get_array_of_building_status(screenshot_img)
@@ -39,7 +44,7 @@ def main():
             debug("No building to buy, scrolling up to see if we can buy a building further up")
             for blg in reversed(buildings):
                 if (blg[1] != building_detection.BuildingStatus.BUILDING_NOT_FOUND):
-                    move_to_and_scroll(1000, blg[2], blg[3])
+                    move_to_and_scroll(__SCROLL_AMOUNT, blg[2], blg[3])
                     break
 
             screenshot_img = screenshotter.take_screenshot()
@@ -52,18 +57,20 @@ def main():
                     break
         
         if not bought_a_building and not was_able_to_buy_previously:
-            count_upper += 60
+            debug(f"No building was able to be bought twice in a row, increasing wait time to {count_upper}")
+            count_upper += __BUY_INCREASE_TIME
         elif bought_a_building and was_able_to_buy_previously:
-            count_upper -= 15
-            if count_upper < 10:
-                count_upper = 10
+            debug(f"A building was able to be bought twice in a row, decreasing wait time to {count_upper}")
+            count_upper -= __BUY_DECREASE_TIME
+            if count_upper < __MINIMUM_BUY_TIME:
+                count_upper = __MINIMUM_BUY_TIME
 
         was_able_to_buy_previously = bought_a_building
 
         debug(f"Waiting for {count_upper} seconds before checking again")
         
         count = 0
-        while count < count_upper and not keyboard.is_pressed('q'):
+        while count < count_upper and not keyboard.is_pressed(__QUIT_KEY):
             time.sleep(1)
             count += 1
     
