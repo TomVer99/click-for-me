@@ -54,7 +54,7 @@ def main():
         if not bought_a_building and not was_able_to_buy_previously:
             count_upper += 60
         elif bought_a_building and was_able_to_buy_previously:
-            count_upper -= 30
+            count_upper -= 15
             if count_upper < 10:
                 count_upper = 10
 
