@@ -8,6 +8,9 @@ import screenshotter.screenshotter as screenshotter
 __DEBUG = False
 
 def main():
+    count_upper = 60
+    was_able_to_buy_previously = False
+
     while not keyboard.is_pressed('q'):
         screenshot_img = screenshotter.take_screenshot()
         buildings = building_detection.get_array_of_building_status(screenshot_img)
@@ -47,11 +50,20 @@ def main():
                     move_to_and_click(blg[2], blg[3])
                     bought_a_building = True
                     break
+        
+        if not bought_a_building and not was_able_to_buy_previously:
+            count_upper += 60
+        elif bought_a_building and was_able_to_buy_previously:
+            count_upper -= 30
+            if count_upper < 10:
+                count_upper = 10
 
-        debug("Waiting for 60 seconds before checking again")
+        was_able_to_buy_previously = bought_a_building
+
+        debug(f"Waiting for {count_upper} seconds before checking again")
         
         count = 0
-        while count < 60 and not keyboard.is_pressed('q'):
+        while count < count_upper and not keyboard.is_pressed('q'):
             time.sleep(1)
             count += 1
 
