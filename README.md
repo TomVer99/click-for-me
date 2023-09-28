@@ -22,6 +22,8 @@ Click For Me is a Python-based bot designed to automate the tedious clicking and
 - **Buys buildings based on CPS increase** - Click For Me will automatically buy buildings that will increase your CPS by the greatest amount.
 - **Automatically buys upgrades** - Click For Me will automatically buy the most inexpensive upgrade available to you, based on your current bank balance.
 - **Buys upgrades based on CPS increase** - Click For Me will automatically buy upgrades that will increase your CPS by the greatest amount.
+- **Clicks the normal cookie** - Click For Me will automatically click the normal cookie, in addition to buying buildings and upgrades.
+- **Behavior customization** - Click For Me will allow you to customize its behavior based on a settings file.
 
 ## Dependencies
 
