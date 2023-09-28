@@ -47,7 +47,7 @@ def get_array_of_building_status(screenshot_img:cv.typing.MatLike) -> [[str, Bui
     threads = []
 
     for building in Building:
-        thread = threading.Thread(target=detect_building_no_return, args=(screenshot_img, building, ret_val, ret_val_lock))
+        thread = threading.Thread(target=detect_building, args=(screenshot_img, building, ret_val, ret_val_lock))
         thread.start()
         threads.append(thread)
     
@@ -56,23 +56,9 @@ def get_array_of_building_status(screenshot_img:cv.typing.MatLike) -> [[str, Bui
 
     return ret_val
 
-# TODO: refactor back into one function
-def detect_building_no_return(screenshot_img:cv.typing.MatLike, building:Building, ret_val:[[str, BuildingStatus, int, int]] = None, ret_val_lock:threading.Lock = None
-                    , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [str, BuildingStatus, int, int]:
-    temp = detect_building(screenshot_img, building.name, threshold, max_color_delta)
-    
-    result = []
-    result.append(building.name)
-    result.append(temp[0])
-    result.append(temp[1])
-    result.append(temp[2])
-
-    with ret_val_lock:
-        ret_val[building.value] = result
-
-# TODO: refactor back into one function
-def detect_building(screenshot_img:cv.typing.MatLike, building:str
-                    , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA) -> [BuildingStatus, int, int]:
+def detect_building(screenshot_img:cv.typing.MatLike, building:Building
+                    , ret_val:[[str, BuildingStatus, int, int]] = None, ret_val_lock:threading.Lock = None
+                    , threshold:float = __THRESHOLD, max_color_delta:int = __MAX_COLOR_DELTA):
     assert screenshot_img  is not None, f"{inspect.stack()[1][3]}() -> screenshot_img is None"
     buildings_img = cv.imread(__IMAGE_PATH + "buildings.png", cv.IMREAD_COLOR)
     assert buildings_img is not None, f"{inspect.stack()[1][3]}() -> buildings_img is None"
@@ -83,7 +69,7 @@ def detect_building(screenshot_img:cv.typing.MatLike, building:str
     with open(__IMAGE_PATH + "buildings.json", "r") as json_file:
         json_s = json.load(json_file)
         # TODO: read more possible locations per building
-        info = json_s[building][0]
+        info = json_s[building.name][0]
         building_img = buildings_img[int(ppc_height * info[1]):int(ppc_height * (info[1] + 1))
                                      , int(ppc_height * info[0]):int(ppc_width * (info[0] + 1))]
         avg_color_can_buy = get_avg_color_of_image(building_img)
@@ -97,13 +83,15 @@ def detect_building(screenshot_img:cv.typing.MatLike, building:str
             
             # TODO: check color for not purchasable (decrease chance of false positive)
             if check_if_color_is_the_same(avg_color, avg_color_can_buy, max_color_delta):
-                ret_val = BuildingStatus.BUILDING_PURCHASABLE
+                building_status = BuildingStatus.BUILDING_PURCHASABLE
             else:
-                ret_val = BuildingStatus.BUILDING_NOT_PURCHASABLE
+                building_status = BuildingStatus.BUILDING_NOT_PURCHASABLE
             
-            return [ret_val, ( location[0] + ( ppc_width / 2 )), ( location[1] + ( ppc_height / 2 ))]
+            with ret_val_lock:
+                ret_val[building.value] = [building.name, building_status, ( location[0] + ( ppc_width / 2 )), ( location[1] + ( ppc_height / 2 ))]
         else:
-            return [BuildingStatus.BUILDING_NOT_FOUND,0,0]
+            with ret_val_lock:
+                ret_val[building.value] = [building.name, BuildingStatus.BUILDING_NOT_FOUND, 0, 0]
     
 def get_avg_color_of_image(img:cv.typing.MatLike) -> [int, int, int]:
     avg_color_per_row = np.average(img, axis=0)
